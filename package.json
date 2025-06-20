@@ -1,0 +1,28 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "oxlint --fix --fix-suggestions && nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "oxlint:fix": "oxlint --fix --fix-suggestions"
+  },
+  "dependencies": {
+    "nuxt": "^3.17.5",
+    "diod": "^3.0.0",
+    "reflect-metadata": "^0.2.2",
+    "uuid": "^11.1.0",
+    "vue": "^3.5.16",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.19.1",
+    "@vue/test-utils": "^2.4.6",
+    "oxlint": "^1.1.0",
+    "happy-dom": "^17.6.3",
+    "vitest": "^3.2.4"
+  }
+}

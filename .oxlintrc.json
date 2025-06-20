@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "vitest",
+    "import",
+    "unicorn",
+    "typescript",
+    "oxc"
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "tests/snapshots/**",
+    "test.ts",
+    "vendor"
+  ]
+}
