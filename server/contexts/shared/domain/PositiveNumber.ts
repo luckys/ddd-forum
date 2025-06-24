@@ -1,4 +1,4 @@
-export class PostiveNumber {
+export class PositiveNumber {
     private readonly value: number;
 
     constructor(value: number = 0) {
@@ -12,23 +12,23 @@ export class PostiveNumber {
         }
     }
 
-    public isEqual(other: PostiveNumber): boolean {
+    public isEqual(other: PositiveNumber): boolean {
         return this.getValue() === other.getValue();
     }   
 
-    public isBiggerOrEqual(other: PostiveNumber): boolean {
+    public isBiggerOrEqual(other: PositiveNumber): boolean {
         return this.getValue() >= other.getValue();
     }
 
-    public isSmallerOrEqual(other: PostiveNumber): boolean {
+    public isSmallerOrEqual(other: PositiveNumber): boolean {
         return this.getValue() <= other.getValue();
     }
 
-    public isBiggerThan(other: PostiveNumber): boolean {
+    public isBiggerThan(other: PositiveNumber): boolean {
         return this.getValue() > other.getValue();
     }
 
-    public isSmallerThan(other: PostiveNumber): boolean {
+    public isSmallerThan(other: PositiveNumber): boolean {
         return this.getValue() < other.getValue();
     }
 

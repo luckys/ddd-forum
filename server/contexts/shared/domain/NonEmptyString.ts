@@ -1,7 +1,7 @@
 export class NonEmptyString {
     private readonly value: string;
 
-    private constructor(value: string) {
+    constructor(value: string) {
         this.ensureIsNotEmpty(value);
         this.value = value;
     }
@@ -18,9 +18,5 @@ export class NonEmptyString {
 
     public getValue(): string {
         return this.value;
-    }
-
-    public static create(value: string): NonEmptyString {
-        return new NonEmptyString(value);
     }
 }
