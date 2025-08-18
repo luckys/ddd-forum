@@ -9,6 +9,10 @@ import { ThreadMovedDomainEvent } from "./ThreadMovedDomainEvent";
 import { ThreadTaggedDomainEvent } from "./ThreadTaggedDomainEvent";
 import { CategoryId } from "~~/server/contexts/forum/categories/domain/CategoryId";
 import { ThreadTag } from "./ThreadTag";
+import { ThreadVisibility } from "./ThreadVisibility";
+import { ThreadStatus } from "./ThreadStatus";
+import type { ThreadVisibilityValue } from "./ThreadVisibility";
+import type { ThreadStatusValue } from "./ThreadStatus";
 
 export class Thread extends AggregateRoot {
     private readonly createdAt: Date;
@@ -16,6 +20,8 @@ export class Thread extends AggregateRoot {
     private closedAt: Date | null;
     private categoryId: CategoryId | null;
     private readonly tags: ThreadTag[];
+    private visibility: ThreadVisibility;
+    private status: ThreadStatus;
 
     private constructor(
         private readonly id: ThreadId,
@@ -25,6 +31,8 @@ export class Thread extends AggregateRoot {
         closedAt?: Date | null,
         categoryId?: CategoryId | null,
         tags?: ThreadTag[],
+        visibility?: ThreadVisibility,
+        status?: ThreadStatus,
     ) {
         super();
         this.createdAt = createdAt ?? new Date();
@@ -32,6 +40,8 @@ export class Thread extends AggregateRoot {
         this.closedAt = closedAt ?? null;
         this.categoryId = categoryId ?? null;
         this.tags = tags ?? [];
+        this.visibility = visibility ?? ThreadVisibility.createNone();
+        this.status = status ?? ThreadStatus.createNone();
     }
 
     static create(id: string, title: string): Thread {
@@ -52,7 +62,7 @@ export class Thread extends AggregateRoot {
         if (newTitle.getValue() === this.title.getValue()) return;
         this.title = newTitle;
         this.updatedAt = new Date();
-        this.record(new ThreadUpdatedDomainEvent(this.idValue(), this.titleValue(), new UuidIdentifier().generate(), new Date()));
+        this.record(new ThreadUpdatedDomainEvent(this.idValue(), new UuidIdentifier().generate(), new Date(), this.titleValue()));
     }
 
     moveToCategory(categoryId: string): void {
@@ -72,6 +82,22 @@ export class Thread extends AggregateRoot {
         this.record(new ThreadTaggedDomainEvent(this.idValue(), newTag.getValue(), new UuidIdentifier().generate(), new Date()));
     }
 
+    setVisibility(visibility: ThreadVisibilityValue): void {
+        const newVisibility = new ThreadVisibility(visibility);
+        if (newVisibility.getValue() === this.visibility.getValue()) return;
+        this.visibility = newVisibility;
+        this.updatedAt = new Date();
+        this.record(new ThreadUpdatedDomainEvent(this.idValue(), new UuidIdentifier().generate(), new Date(), undefined, this.visibility.getValue()));
+    }
+
+    setStatus(status: ThreadStatusValue): void {
+        const newStatus = new ThreadStatus(status);
+        if (newStatus.getValue() === this.status.getValue()) return;
+        this.status = newStatus;
+        this.updatedAt = new Date();
+        this.record(new ThreadUpdatedDomainEvent(this.idValue(), new UuidIdentifier().generate(), new Date(), undefined, undefined, this.status.getValue()));
+    }
+
     idValue(): string {
         return this.id.getValue();
     }
@@ -89,6 +115,8 @@ export class Thread extends AggregateRoot {
             closedAt: this.closedAt,
             categoryId: this.categoryId ? this.categoryId.getValue() : null,
             tags: this.tags.map(t => t.getValue()),
+            visibility: this.visibility.getValue(),
+            status: this.status.getValue(),
         };
     }
 }
