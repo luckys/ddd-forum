@@ -2,7 +2,7 @@ import { container } from "~~/server/contexts/shared/infrastructure/dependency-i
 import { ThreadPaginator } from "~~/server/contexts/forum/threads/application/paginate/ThreadPaginator";
 import { parseCriteriaFromEvent } from "~~/server/routes/shared/criteria";
 import { H3Event, getQuery, getRequestURL } from 'h3';
-import { buildLaravelPaginationResponse } from "~~/server/routes/shared/pagination";
+import { PaginationBuilder } from "~~/server/routes/shared/pagination/PaginationBuilder";
 
 export default defineEventHandler(async (event: H3Event) => {
   const criteria = parseCriteriaFromEvent(event);
@@ -17,5 +17,6 @@ export default defineEventHandler(async (event: H3Event) => {
   }
   const page = criteria.pageNumber ?? 1
   const perPage = criteria.pageSize ?? items.length
-  return buildLaravelPaginationResponse(items.map(t => t.toPrimitives()), total, page, perPage, url, query);
+  const builder = new PaginationBuilder()
+  return builder.build(items.map(t => t.toPrimitives()), total, page, perPage, url, query)
 });
