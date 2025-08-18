@@ -1,16 +1,17 @@
 import { ContainerBuilder } from "diod";
 import { EventBus } from "../../../shared/domain/event/EventBus";
-import { InMemoryCategoryRepository } from "./InMemoryCategoryRepository";
+import { DrizzleCategoryRepository } from "./DrizzleCategoryRepository";
 import { CategoryCreator } from "../application/create/CategoryCreator";
 import { CategoryFinder } from "../application/find/CategoryFinder";
 import { CategoryDeleter } from "../application/delete/CategoryDeleter";
 import { CategorySearcher } from "../application/search/CategorySearcher";
+import { CategoryPaginator } from "../application/paginate/CategoryPaginator";
 
 export class CategoryServiceProvider {
   register(builder: ContainerBuilder): void {
-    const repository = new InMemoryCategoryRepository();
+    const repository = new DrizzleCategoryRepository();
 
-    builder.register(InMemoryCategoryRepository).useFactory(() => repository);
+    builder.register(DrizzleCategoryRepository).useFactory(() => repository);
 
     builder.register(CategoryCreator).useFactory(ctx => {
       const eventBus = ctx.get(EventBus);
@@ -29,5 +30,10 @@ export class CategoryServiceProvider {
     builder.register(CategorySearcher).useFactory(() => {
       return new CategorySearcher(repository);
     });
+
+    builder.register(CategoryPaginator).useFactory(() => {
+      return new CategoryPaginator(repository);
+    });
   }
 }
+

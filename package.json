@@ -9,12 +9,16 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "oxlint:fix": "oxlint --fix --fix-suggestions",
-    "test": "vitest"
+    "test": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node server/database/migrate.mjs"
   },
   "dependencies": {
+    "better-sqlite3": "^12.2.0",
     "diod": "^3.0.0",
     "drizzle-orm": "^0.44.4",
     "nuxt": "^4.0.3",
+    "postgres": "^3.4.7",
     "reflect-metadata": "^0.2.2",
     "typescript": "^5.9.2",
     "uuid": "^11.1.0",

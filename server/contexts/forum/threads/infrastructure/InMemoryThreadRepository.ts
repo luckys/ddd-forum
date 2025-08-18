@@ -19,4 +19,8 @@ export class InMemoryThreadRepository implements ThreadRepository {
     async search(_criteria: Criteria): Promise<Thread[]> {
         return Array.from(InMemoryThreadRepository.storage.values());
     }
+
+    async count(_criteria: Criteria): Promise<number> {
+        return InMemoryThreadRepository.storage.size;
+    }
 }

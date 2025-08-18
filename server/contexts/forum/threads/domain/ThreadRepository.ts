@@ -6,4 +6,5 @@ export interface ThreadRepository {
     save(thread: Thread): Promise<void>;
     find(id: ThreadId): Promise<Thread | null>;
     search(criteria: Criteria): Promise<Thread[]>;
+    count(criteria: Criteria): Promise<number>;
 }

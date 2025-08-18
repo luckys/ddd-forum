@@ -18,6 +18,10 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     return Array.from(this.data.values());
   }
 
+  async count(_criteria: Criteria): Promise<number> {
+    return this.data.size;
+  }
+
   async delete(id: CategoryId): Promise<void> {
     this.data.delete(id.getValue());
   }
