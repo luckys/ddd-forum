@@ -1,5 +1,7 @@
 # DDD Forum — Nuxt + Drizzle + Vitest
 
+[🇬🇧 English](./README.md) · [🇪🇸 Español](./README.es.md)
+
 Nuxt 4 forum project applying Domain-Driven Design (DDD) in the style of Codely. The API lives under `server/` and the application under `app/`. Persistence is powered by Drizzle ORM and SQLite (better-sqlite3). Pagination is implemented with small OOP value objects and a builder, returning a metadata-rich response.
 
 ## Stack
