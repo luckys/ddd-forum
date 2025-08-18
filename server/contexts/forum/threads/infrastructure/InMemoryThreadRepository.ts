@@ -1,6 +1,7 @@
 import type { ThreadRepository } from "../domain/ThreadRepository";
 import type { Thread } from "../domain/Thread";
 import type { ThreadId } from "../domain/ThreadId";
+import type { Criteria } from "~~/server/contexts/shared/domain/criteria/Criteria";
 
 export class InMemoryThreadRepository implements ThreadRepository {
     private static storage: Map<string, Thread> = new Map();
@@ -13,5 +14,9 @@ export class InMemoryThreadRepository implements ThreadRepository {
         const found = InMemoryThreadRepository.storage.get(id.getValue());
         if (found) return found;
         return null;
+    }
+
+    async search(_criteria: Criteria): Promise<Thread[]> {
+        return Array.from(InMemoryThreadRepository.storage.values());
     }
 }

@@ -3,6 +3,7 @@ import { EventBus } from "../../../shared/domain/event/EventBus";
 import { InMemoryThreadRepository } from "./InMemoryThreadRepository";
 import { ThreadStatusSetter } from "../application/status/ThreadStatusSetter";
 import { ThreadVisibilitySetter } from "../application/visibility/ThreadVisibilitySetter";
+import { ThreadSearcher } from "../application/search/ThreadSearcher";
 
 export class ThreadServiceProvider {
   register(builder: ContainerBuilder): void {
@@ -18,6 +19,10 @@ export class ThreadServiceProvider {
     builder.register(ThreadVisibilitySetter).useFactory(ctx => {
       const eventBus = ctx.get(EventBus);
       return new ThreadVisibilitySetter(repository, eventBus);
+    });
+
+    builder.register(ThreadSearcher).useFactory(() => {
+      return new ThreadSearcher(repository);
     });
   }
 }
