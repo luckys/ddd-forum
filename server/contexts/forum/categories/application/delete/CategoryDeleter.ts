@@ -17,6 +17,7 @@ export class CategoryDeleter {
             throw new CategoryNotFoundError(id);
         }
 
+        category.delete();
         await this.repository.delete(categoryId);
         await this.eventBus.publish(category.pullDomainEvents());
     }

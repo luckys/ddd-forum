@@ -2,6 +2,9 @@ import { AggregateRoot } from "~~/server/contexts/shared/domain/AggregateRoot";
 import { CategoryId } from "./CategoryId";
 import { CategoryName } from "./CategoryName";
 import { CategoryDescription } from "./CategoryDescription";
+import { CategoryCreatedDomainEvent } from "./CategoryCreatedDomainEvent";
+import { CategoryDeletedDomainEvent } from "./CategoryDeletedDomainEvent";
+import { UuidIdentifier } from "~~/server/contexts/shared/infrastructure/UuidIdentifier";
 
 export class Category extends AggregateRoot {
     private readonly createdAt: Date;
@@ -20,11 +23,13 @@ export class Category extends AggregateRoot {
     }
 
     static create(id: string, name: string, description?: string | null | undefined): Category {
-        return new Category(
+        const category = new Category(
             new CategoryId(id),
             new CategoryName(name),
             new CategoryDescription(description),
-        )
+        );
+        category.record(new CategoryCreatedDomainEvent(id, name, description ?? null, new UuidIdentifier().generate(), new Date()));
+        return category;
     }
 
     idValue(): string {
@@ -37,6 +42,10 @@ export class Category extends AggregateRoot {
 
     descriptionValue(): string | null | undefined {
         return this.description.getValue();
+    }
+
+    delete(): void {
+        this.record(new CategoryDeletedDomainEvent(this.idValue(), new UuidIdentifier().generate(), new Date()));
     }
 
     toPrimitives() {
