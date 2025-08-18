@@ -122,6 +122,31 @@ export type PaginationResponsePrimitives<T> = {
 
 Both return `PaginationResponsePrimitives<T>` with `data` serialized via each aggregate’s `toPrimitives()`.
 
+## Criteria examples
+The helper `parseCriteriaFromEvent()` in `server/routes/shared/criteria.ts` supports both a single filter via `field`, `operator`, `value` and multiple filters via a JSON-encoded `filters` array. It also supports ordering and pagination.
+
+- Single filter (field/operator/value):
+  - `?field=name&operator=CONTAINS&value=foo`
+
+- Multiple filters (JSON-encoded array):
+  - `?filters=%5B%7B%22field%22%3A%22name%22%2C%22operator%22%3A%22CONTAINS%22%2C%22value%22%3A%22foo%22%7D%2C%7B%22field%22%3A%22status%22%2C%22operator%22%3A%22EQUAL%22%2C%22value%22%3A%22published%22%7D%5D`
+  - Decoded example:
+    ```json
+    [
+      { "field": "name", "operator": "CONTAINS", "value": "foo" },
+      { "field": "status", "operator": "EQUAL", "value": "published" }
+    ]
+    ```
+
+- Ordering:
+  - `?orderBy=createdAt&orderType=DESC`
+
+- Pagination:
+  - `?pageNumber=2&pageSize=20`
+
+- Full example:
+  - `/api/v1/categories?filters=%5B%7B%22field%22%3A%22name%22%2C%22operator%22%3A%22CONTAINS%22%2C%22value%22%3A%22foo%22%7D%5D&orderBy=createdAt&orderType=DESC&pageNumber=2&pageSize=20`
+
 ## Tests
 - Framework: Vitest.
 - Run: `npm run test`.
