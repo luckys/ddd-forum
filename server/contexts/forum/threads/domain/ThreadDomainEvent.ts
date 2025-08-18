@@ -16,6 +16,7 @@ export class ThreadDomainEvent extends DomainEvent {
         aggregateId: string,
         eventId: string,
         occurredOn: Date,
+        _attributes?: DomainEventAttributes,
     ): ThreadDomainEvent {
         return new ThreadDomainEvent(
             ThreadDomainEvent.eventName,
