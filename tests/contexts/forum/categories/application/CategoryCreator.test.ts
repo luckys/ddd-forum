@@ -1,12 +1,12 @@
 import { describe, test } from 'vitest';
-import { MockCategoryRepository } from '../domain/MockCategoryRepository';
-import { MockEventBus } from "~~/tests/contexts/shared/infrastructure/MockEventBus";
 import { CategoryCreator } from "~~/server/contexts/forum/categories/application/create/CategoryCreator";
-import { CategoryMother } from "../domain/CategoryMother";
+import { MockEventBus } from "~~/tests/contexts/shared/infrastructure/MockEventBus";
 import { CategoryCreatedDomainEventMother } from "../domain/CategoryCreatedDomainEventMother";
+import { CategoryMother } from "../domain/CategoryMother";
+import { CategoryRepositoryMock } from '../domain/CategoryRepositoryMock';
 
 describe('CategoryCreator', () => {
-    const repository = new MockCategoryRepository();
+    const repository = new CategoryRepositoryMock();
     const eventBus = new MockEventBus();
     const categoryCreator = new CategoryCreator(repository, eventBus);
 

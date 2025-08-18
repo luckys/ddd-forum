@@ -1,8 +1,7 @@
-import {DomainEvent, DomainEventAttributes} from "~~/server/contexts/shared/domain/event/DomainEvent";
+import { DomainEvent, DomainEventAttributes } from "~~/server/contexts/shared/domain/event/DomainEvent";
 
 export class CategoryDomainEvent extends DomainEvent {
     static eventName = "forum.category.*";
-    private attributes: unknown;
 
     constructor(
         eventName: string,

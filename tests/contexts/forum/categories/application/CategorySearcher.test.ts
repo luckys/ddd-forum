@@ -1,11 +1,11 @@
-import { describe, test, expect } from 'vitest';
-import { MockCategoryRepository } from '../domain/MockCategoryRepository';
-import { CriteriaMother } from "~~/tests/contexts/shared/domain/criteria/CriteriaMother";
+import { describe, expect, test } from 'vitest';
 import { CategorySearcher } from "~~/server/contexts/forum/categories/application/search/CategorySearcher";
+import { CriteriaMother } from "~~/tests/contexts/shared/domain/criteria/CriteriaMother";
 import { CategoryMother } from "../domain/CategoryMother";
+import { CategoryRepositoryMock } from '../domain/CategoryRepositoryMock';
 
 describe('CategorySearcher', () => {
-    const repository = new MockCategoryRepository();
+    const repository = new CategoryRepositoryMock();
     const categorySearcher = new CategorySearcher(repository);
 
     test('should return empty array when category is not found', async () => {
