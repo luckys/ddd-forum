@@ -147,6 +147,18 @@ The helper `parseCriteriaFromEvent()` in `server/routes/shared/criteria.ts` supp
 - Full example:
   - `/api/v1/categories?filters=%5B%7B%22field%22%3A%22name%22%2C%22operator%22%3A%22CONTAINS%22%2C%22value%22%3A%22foo%22%7D%5D&orderBy=createdAt&orderType=DESC&pageNumber=2&pageSize=20`
 
+### Supported operators
+From `server/contexts/shared/domain/criteria/FilterOperator.ts`:
+
+| Operator token   | Meaning            | Example query                                     |
+|------------------|--------------------|---------------------------------------------------|
+| `EQUAL`          | Equals             | `?field=status&operator=EQUAL&value=published`    |
+| `NOT_EQUAL`      | Not equals         | `?field=status&operator=NOT_EQUAL&value=draft`    |
+| `GT`             | Greater than       | `?field=views&operator=GT&value=100`              |
+| `LT`             | Less than          | `?field=views&operator=LT&value=10`               |
+| `CONTAINS`       | Substring match    | `?field=name&operator=CONTAINS&value=foo`         |
+| `NOT_CONTAINS`   | Not substring      | `?field=name&operator=NOT_CONTAINS&value=bar`     |
+
 ## Tests
 - Framework: Vitest.
 - Run: `npm run test`.

@@ -143,6 +143,18 @@ El helper `parseCriteriaFromEvent()` en `server/routes/shared/criteria.ts` sopor
 - Ejemplo completo:
   - `/api/v1/categories?filters=%5B%7B%22field%22%3A%22name%22%2C%22operator%22%3A%22CONTAINS%22%2C%22value%22%3A%22foo%22%7D%5D&orderBy=createdAt&orderType=DESC&pageNumber=2&pageSize=20`
 
+### Operadores soportados
+Desde `server/contexts/shared/domain/criteria/FilterOperator.ts`:
+
+| Token operador   | Significado        | Ejemplo de query                                  |
+|------------------|--------------------|---------------------------------------------------|
+| `EQUAL`          | Igual              | `?field=status&operator=EQUAL&value=published`    |
+| `NOT_EQUAL`      | Distinto           | `?field=status&operator=NOT_EQUAL&value=draft`    |
+| `GT`             | Mayor que          | `?field=views&operator=GT&value=100`              |
+| `LT`             | Menor que          | `?field=views&operator=LT&value=10`               |
+| `CONTAINS`       | Contiene subcadena | `?field=name&operator=CONTAINS&value=foo`         |
+| `NOT_CONTAINS`   | No contiene        | `?field=name&operator=NOT_CONTAINS&value=bar`     |
+
 ## Tests
 - Framework: Vitest.
 - Ejecución: `npm run test`.
