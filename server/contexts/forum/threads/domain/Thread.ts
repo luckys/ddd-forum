@@ -4,6 +4,7 @@ import { ThreadTitle } from "./ThreadTitle";
 import { ThreadCreatedDomainEvent } from "./ThreadCreatedDomainEvent";
 import { ThreadClosedDomainEvent } from "./ThreadClosedDomainEvent";
 import { UuidIdentifier } from "~~/server/contexts/shared/infrastructure/UuidIdentifier";
+import { ThreadUpdatedDomainEvent } from "./ThreadUpdatedDomainEvent";
 
 export class Thread extends AggregateRoot {
     private readonly createdAt: Date;
@@ -34,6 +35,14 @@ export class Thread extends AggregateRoot {
         this.closedAt = new Date();
         this.updatedAt = new Date();
         this.record(new ThreadClosedDomainEvent(this.idValue(), new UuidIdentifier().generate(), new Date()));
+    }
+
+    updateTitle(title: string): void {
+        const newTitle = new ThreadTitle(title);
+        if (newTitle.getValue() === this.title.getValue()) return;
+        this.title = newTitle;
+        this.updatedAt = new Date();
+        this.record(new ThreadUpdatedDomainEvent(this.idValue(), this.titleValue(), new UuidIdentifier().generate(), new Date()));
     }
 
     idValue(): string {
