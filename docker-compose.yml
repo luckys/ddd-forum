@@ -5,17 +5,10 @@ services:
     image: node:22.18-alpine
     working_dir: /app
     command: sh -c "npm ci && npm run dev"
-    environment:
-      # Nuxt dev server
-      - NUXT_HOST=0.0.0.0
-      - NUXT_PORT=3000
-      # Current project uses SQLite by default
-      - DATABASE_FILE=/app/forum.sqlite
-      # Optional: Postgres connection string for future use
-      - DATABASE_URL=postgres://forum:forum@db:5432/forum
-      - NODE_ENV=development
+    env_file:
+      - .env
     ports:
-      - "3000:3000"
+      - "${NUXT_PORT:-3000}:3000"
     volumes:
       - ./:/app
     depends_on:
