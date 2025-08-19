@@ -7,6 +7,8 @@ services:
     command: sh -c "npm ci && npm run dev"
     env_file:
       - .env
+    environment:
+      - DATABASE_FILE=/app/data/forum.sqlite
     ports:
       - "${NUXT_PORT:-3000}:3000"
     volumes:
