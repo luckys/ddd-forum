@@ -2,6 +2,11 @@
   "extends": "../.nuxt/tsconfig.server.json",
   "compilerOptions": {
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": "..",
+    "paths": {
+      "~~": ["."],
+      "~~/*": ["*"]
+    }
   }
 }

@@ -2,7 +2,7 @@
 
 [🇬🇧 English](./README.md) · [🇪🇸 Español](./README.es.md)
 
-Nuxt 4 forum project applying Domain-Driven Design (DDD) in the style of Codely. The API lives under `server/` and the application under `app/`. Persistence is powered by Drizzle ORM and SQLite (better-sqlite3). Pagination is implemented with small OOP value objects and a builder, returning a metadata-rich response.
+Nuxt 4 forum project applying Domain-Driven Design (DDD) in the style of Codely. The API lives under `server/` and the application under `app/`. Persistence is powered by Drizzle ORM and SQLite (better-sqlite3). Pagination is implemented with small OOP value objects, a presenter, and a shared helper, returning a metadata-rich response.
 
 ## Stack
 - Nuxt 4 (Nitro + Vite)
@@ -65,34 +65,23 @@ npm run db:migrate
 - `DATABASE_FILE`: SQLite file path. Defaults to `forum.sqlite` at project root.
 
 ## Pagination (OOP)
-Pagination is implemented with small composable value objects and a builder that assembles the final response.
+Pagination is implemented with small composable value objects and a presenter that assembles the final response. A shared helper encapsulates the HTTP-specific workflow for list endpoints.
 
-- Builder: `server/routes/shared/pagination/PaginationBuilder.ts`
+- Presenter: `server/routes/shared/pagination/HttpPaginationPresenter.ts`
+- Helper: `server/routes/shared/pagination/buildPaginatedResponse.ts`
 - Types: `server/routes/shared/pagination/PaginationTypes.ts`
-- Value Objects: `PagePosition`, `PageTotals`, `PageLinks`
+- Value Objects: `PagePosition`, `PageTotals`, `PageLinks`, `PaginationMeta`
 
 Endpoint usage:
 ```ts
-import { PaginationBuilder } from "~~/server/routes/shared/pagination/PaginationBuilder"
+import { container } from "~~/server/contexts/shared/infrastructure/dependency-injection/diod.config"
+import { CategoryPaginator } from "~~/server/contexts/forum/categories/application/paginate/CategoryPaginator"
+import { H3Event } from 'h3'
+import { buildPaginatedResponse } from "~~/server/routes/shared/pagination/buildPaginatedResponse"
 
-export default defineEventHandler(async (event) => {
-  const criteria = parseCriteriaFromEvent(event)
+export default defineEventHandler(async (event: H3Event) => {
   const paginator = container.get(CategoryPaginator)
-  const { items, total } = await paginator.execute(criteria)
-
-  const url = getRequestURL(event)
-  const rawQuery = getQuery(event)
-  const query: Record<string, string | string[] | undefined> = {}
-  for (const [k, v] of Object.entries(rawQuery)) {
-    if (typeof v === 'string') query[k] = v
-    if (Array.isArray(v)) query[k] = v.filter((x): x is string => typeof x === 'string')
-  }
-
-  const page = criteria.pageNumber ?? 1
-  const perPage = criteria.pageSize ?? items.length
-
-  const builder = new PaginationBuilder()
-  return builder.build(items.map(c => c.toPrimitives()), total, page, perPage, url, query)
+  return buildPaginatedResponse(event, paginator, c => c.toPrimitives())
 })
 ```
 
@@ -123,7 +112,7 @@ export type PaginationResponsePrimitives<T> = {
 Both return `PaginationResponsePrimitives<T>` with `data` serialized via each aggregate’s `toPrimitives()`.
 
 ## Criteria examples
-The helper `parseCriteriaFromEvent()` in `server/routes/shared/criteria.ts` supports both a single filter via `field`, `operator`, `value` and multiple filters via a JSON-encoded `filters` array. It also supports ordering and pagination.
+The helper `parseCriteriaFromEvent()` in `server/routes/shared/HttpCriteriaParser.ts` supports both a single filter via `field`, `operator`, `value` and multiple filters via a JSON-encoded `filters` array. It also supports ordering and pagination. Query normalization is handled by `server/routes/shared/HttpQueryNormalizer.ts` inside `buildPaginatedResponse`.
 
 - Single filter (field/operator/value):
   - `?field=name&operator=CONTAINS&value=foo`
@@ -209,9 +198,11 @@ server/
         categories/index.get.ts
         threads/index.get.ts
     shared/
-      criteria.ts
+      HttpCriteriaParser.ts
+      HttpQueryNormalizer.ts
       pagination/
-        PaginationBuilder.ts
+        HttpPaginationPresenter.ts
+        buildPaginatedResponse.ts
         PaginationTypes.ts
         PagePosition.ts
         PageTotals.ts
@@ -224,7 +215,7 @@ server/
 2. Implement use cases in `application/`.
 3. Implement infrastructure (Drizzle repositories, service providers, routes) in `infrastructure/`.
 4. Generate and apply migrations when schema changes.
-5. Use `PaginationBuilder` for list endpoints that need pagination.
+5. Use `buildPaginatedResponse` for list endpoints that need pagination.
 
 ## Notes
 - Code in TypeScript, no comments in production code.
