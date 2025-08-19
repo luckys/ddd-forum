@@ -13,7 +13,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node server/database/migrate.mjs",
     "db:reset": "bash -c 'mkdir -p backups && [ -f data/forum.sqlite ] && mv data/forum.sqlite backups/data.forum.sqlite.$(date +%Y%m%d_%H%M%S) || true && npm run db:migrate'",
-    "docker:up": "docker compose up"
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "better-auth": "^1.3.7",
